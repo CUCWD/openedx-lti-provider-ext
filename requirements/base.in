@@ -3,5 +3,7 @@
 
 Django             # Web application framework
 
+django-config-models      # Configuration models for Django allowing config management with auditing
+django-model-utils        # Provides TimeStampedModel abstract base class
 
 openedx-atlas
