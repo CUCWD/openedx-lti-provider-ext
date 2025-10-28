@@ -6,14 +6,17 @@ Tests for the LTI outcome service handlers, both in outcomes.py and in tasks.py
 from unittest.mock import ANY, MagicMock, patch
 
 from django.test import TestCase
+from django.utils.module_loading import import_string
 from lxml import etree
 from opaque_keys.edx.locator import BlockUsageLocator, CourseLocator
 from xmodule.modulestore.tests.django_utils import TEST_DATA_SPLIT_MODULESTORE, ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory, BlockFactory
 
-import lms.djangoapps.lti_provider.outcomes as outcomes
-from common.djangoapps.student.tests.factories import UserFactory
-from lms.djangoapps.lti_provider.models import GradedAssignment, LtiConsumer, OutcomeService
+outcomes = import_string('lms.djangoapps.lti_provider.outcomes')
+UserFactory = import_string('common.djangoapps.student.tests.factories.UserFactory')
+GradedAssignment = import_string('lms.djangoapps.lti_provider.models.GradedAssignment')
+LtiConsumer = import_string('lms.djangoapps.lti_provider.models.LtiConsumer')
+OutcomeService = import_string('lms.djangoapps.lti_provider.models.OutcomeService')
 
 
 class StoreOutcomeParametersTest(TestCase):

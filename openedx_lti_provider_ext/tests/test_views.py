@@ -9,12 +9,15 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
+from django.utils.module_loading import import_string
 from opaque_keys.edx.locator import BlockUsageLocator, CourseLocator
-
-from common.djangoapps.student.tests.factories import UserFactory
-from lms.djangoapps.courseware.testutils import RenderXBlockTestMixin
-from lms.djangoapps.lti_provider import models, views
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase  # lint-amnesty, pylint: disable=wrong-import-order
+
+UserFactory = import_string('common.djangoapps.student.tests.factories.UserFactory')
+RenderXBlockTestMixin = import_string('lms.djangoapps.courseware.testutils.RenderXBlockTestMixin')
+models = import_string('lms.djangoapps.lti_provider.models')
+views = import_string('lms.djangoapps.lti_provider.views')
+
 
 LTI_DEFAULT_PARAMS = {
     'roles': 'Instructor,urn:lti:instrole:ims/lis/Administrator',

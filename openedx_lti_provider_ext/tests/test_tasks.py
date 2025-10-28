@@ -7,11 +7,14 @@ from unittest.mock import MagicMock, patch
 
 import ddt
 from django.test import TestCase
+from django.utils.module_loading import import_string
 from opaque_keys.edx.locator import BlockUsageLocator, CourseLocator
 
-import lms.djangoapps.lti_provider.tasks as tasks
-from common.djangoapps.student.tests.factories import UserFactory
-from lms.djangoapps.lti_provider.models import GradedAssignment, LtiConsumer, OutcomeService
+tasks = import_string('lms.djangoapps.lti_provider.tasks')
+UserFactory = import_string('common.djangoapps.student.tests.factories.UserFactory')
+GradedAssignment = import_string('lms.djangoapps.lti_provider.models.GradedAssignment')
+LtiConsumer = import_string('lms.djangoapps.lti_provider.models.LtiConsumer')
+OutcomeService = import_string('lms.djangoapps.lti_provider.models.OutcomeService')
 
 
 class BaseOutcomeTest(TestCase):

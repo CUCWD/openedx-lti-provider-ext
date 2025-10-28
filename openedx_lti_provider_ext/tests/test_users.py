@@ -12,11 +12,12 @@ from django.core.exceptions import PermissionDenied
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.utils.module_loading import import_string
 
-from common.djangoapps.student.tests.factories import UserFactory
-
-from lms.djangoapps.lti_provider import users
-from lms.djangoapps.lti_provider.models import LtiConsumer, LtiUser
+UserFactory = import_string('common.djangoapps.student.tests.factories.UserFactory')
+users = import_string('lms.djangoapps.lti_provider.users')
+LtiConsumer = import_string('lms.djangoapps.lti_provider.models.LtiConsumer')
+LtiUser = import_string('lms.djangoapps.lti_provider.models.LtiUser')
 
 
 class UserManagementHelperTest(TestCase):

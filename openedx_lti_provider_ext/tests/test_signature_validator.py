@@ -8,9 +8,10 @@ from unittest.mock import patch
 import ddt
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.utils.module_loading import import_string
 
-from lms.djangoapps.lti_provider.models import LtiConsumer
-from lms.djangoapps.lti_provider.signature_validator import SignatureValidator
+LtiConsumer = import_string('lms.djangoapps.lti_provider.models.LtiConsumer')
+SignatureValidator = import_string('lms.djangoapps.lti_provider.signature_validator.SignatureValidator')
 
 
 def get_lti_consumer():
