@@ -1,5 +1,5 @@
 .. openedx-lti-provider-ext documentation top level file, created by
-   sphinx-quickstart on Tue Sep 30 11:02:44 2025.
+   sphinx-quickstart on Wed Dec 10 09:17:54 2025.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
