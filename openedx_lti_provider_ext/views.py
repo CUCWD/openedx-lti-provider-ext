@@ -232,13 +232,59 @@ def handleUserByRole(request, params):
             log.info(f"Enrolled user {user.username} in course {course_key} with honor mode.")
         
     # Define actions for each role.
+    # https://www.imsglobal.org/specs/ltiv1p0/implementation-guide (Appendix A.2 Role Vocabularies)
     actions = {
+        # Administrators
+        # -------------------------------------------
         'administrator': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator/administrator': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator/support': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator/externaldeveloper': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator/systemadministrator': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator/externalsystemadministrator': _handle_administrator,
+        'urn:lti:role:ims/lis/administrator/externalsupport': _handle_administrator,
+
+        # A person with institution-level management or oversight responsibilities (LMS administrators, Deans, Department heads, System owners)
         'urn:lti:instrole:ims/lis/administrator': _handle_administrator,
+        
+        # Instructors
+        # -------------------------------------------
         'instructor': _handle_instructor,
-        'urn:lti:instrole:ims/lis/instructor': _handle_instructor,
+        'urn:lti:role:ims/lis/instructor': _handle_instructor,
+        'urn:lti:role:ims/lis/instructor/primaryinstructor': _handle_instructor,
+        'urn:lti:role:ims/lis/instructor/lecturer': _handle_instructor,
+        'urn:lti:role:ims/lis/instructor/guestinstructor': _handle_instructor,
+        'urn:lti:role:ims/lis/instructor/externalinstructor': _handle_instructor,
+
+        'urn:lti:role:ims/lis/teachingassistant': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistant': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantsection': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantsectionassociation': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantoffering': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistanttemplate': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantgroup': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant/grader': _handle_instructor,
+
+        # Deprecated roles from LTI 1.1 launch
+        'faculty': _handle_instructor,
+        'urn:lti:role:ims/lis/faculty': _handle_instructor,
+        'staff': _handle_instructor,
+        'urn:lti:role:ims/lis/staff': _handle_instructor,
+
+        # Learners
+        # -------------------------------------------
         'learner': _handle_learner,
-        'urn:lti:instrole:ims/lis/learner': _handle_learner,
+        'urn:lti:role:ims/lis/learner': _handle_learner,
+        'urn:lti:role:ims/lis/learner/learner': _handle_learner,
+        'urn:lti:role:ims/lis/learner/noncreditlearner': _handle_learner,
+        'urn:lti:role:ims/lis/learner/guestlearner': _handle_learner,
+        'urn:lti:role:ims/lis/learner/externallearner': _handle_learner,
+        'urn:lti:role:ims/lis/learner/instructor': _handle_learner,
+
+        # Deprecated roles from LTI 1.1 launch
+        'student': _handle_learner,
+        'urn:lti:role:ims/lis/student': _handle_learner,   
     }
         
     # Check for each target role in the list and execute the corresponding action
