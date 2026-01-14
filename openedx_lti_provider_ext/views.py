@@ -132,6 +132,7 @@ def handleUserByRole(request, params):
      - 'course_key' is the course to enroll the user in
     '''
     from common.djangoapps.student.models import CourseEnrollment
+    from common.djangoapps.student.roles import CourseStaffRole, CourseInstructorRole
     from common.djangoapps.course_modes.models import CourseMode
 
     import logging
@@ -158,19 +159,35 @@ def handleUserByRole(request, params):
     # At this time we don't need to do anything special for each role, however, we define
     # separate functions in case we want to add role-specific logic in the future.
 
-    def _handle_administrator():
+    def _handle_staff():
         _handle_course_enrollment()
 
-        # Add administrator-specific logic here
+        # Add staff-specific role logic here
         # e.g. grant additional permissions, etc.
-        # We don't need to do anything special for administrators at this time.
+
+        course_key = params.get('course_key')
+        if not course_key:
+            return  # No course key provided, nothing to do
+        user = request.user
+
+        # Enroll the user as an instructor role if they are already enrolled in the course.
+        if CourseEnrollment.is_enrolled(user, course_key):
+            CourseStaffRole(course_key).add_users(user)
     
     def _handle_instructor():
         _handle_course_enrollment()
 
-        # Add instructor-specific logic here
+        # Add instructor-specific role logic here
         # e.g. grant additional permissions, etc.
-        # We don't need to do anything special for instructors at this time.
+        
+        course_key = params.get('course_key')
+        if not course_key:
+            return  # No course key provided, nothing to do
+        user = request.user
+
+        # Enroll the user as an instructor role if they are already enrolled in the course.
+        if CourseEnrollment.is_enrolled(user, course_key):
+            CourseInstructorRole(course_key).add_users(user)
         
     def _handle_learner():
         _handle_course_enrollment()
@@ -236,17 +253,17 @@ def handleUserByRole(request, params):
     actions = {
         # Administrators
         # -------------------------------------------
-        'administrator': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator/administrator': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator/support': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator/externaldeveloper': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator/systemadministrator': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator/externalsystemadministrator': _handle_administrator,
-        'urn:lti:role:ims/lis/administrator/externalsupport': _handle_administrator,
+        'administrator': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator/administrator': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator/support': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator/externaldeveloper': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator/systemadministrator': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator/externalsystemadministrator': _handle_instructor,
+        'urn:lti:role:ims/lis/administrator/externalsupport': _handle_instructor,
 
         # A person with institution-level management or oversight responsibilities (LMS administrators, Deans, Department heads, System owners)
-        'urn:lti:instrole:ims/lis/administrator': _handle_administrator,
+        'urn:lti:instrole:ims/lis/administrator': _handle_instructor,
         
         # Instructors
         # -------------------------------------------
@@ -257,20 +274,20 @@ def handleUserByRole(request, params):
         'urn:lti:role:ims/lis/instructor/guestinstructor': _handle_instructor,
         'urn:lti:role:ims/lis/instructor/externalinstructor': _handle_instructor,
 
-        'urn:lti:role:ims/lis/teachingassistant': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/teachingassistant': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/teachingassistantsection': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/teachingassistantsectionassociation': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/teachingassistantoffering': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/teachingassistanttemplate': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/teachingassistantgroup': _handle_instructor,
-        'urn:lti:role:ims/lis/teachingassistant/grader': _handle_instructor,
+        'urn:lti:role:ims/lis/teachingassistant': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistant': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantsection': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantsectionassociation': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantoffering': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistanttemplate': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/teachingassistantgroup': _handle_staff,
+        'urn:lti:role:ims/lis/teachingassistant/grader': _handle_staff,
 
         # Deprecated roles from LTI 1.1 launch
         'faculty': _handle_instructor,
         'urn:lti:role:ims/lis/faculty': _handle_instructor,
-        'staff': _handle_instructor,
-        'urn:lti:role:ims/lis/staff': _handle_instructor,
+        'staff': _handle_staff,
+        'urn:lti:role:ims/lis/staff': _handle_staff,
 
         # Learners
         # -------------------------------------------
