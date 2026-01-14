@@ -2,4 +2,4 @@
 SkilRedi changes for LMS LTI Provider application.
 """
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
