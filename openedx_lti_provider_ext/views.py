@@ -149,7 +149,7 @@ def handleUserByRole(request, params):
     if isinstance(roles, (list, tuple, set)):
         roles_lower = [str(role).lower() for role in roles]
     elif isinstance(roles, str):
-        roles_lower = [roles.lower()]
+        roles_lower = [str(role).strip().lower() for role in roles.split(',')]
     else:
         roles_lower = []
 
