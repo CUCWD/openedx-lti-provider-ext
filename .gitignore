@@ -63,3 +63,7 @@ docs/openedx_lti_provider_ext.*.rst
 # Private requirements
 requirements/private.in
 requirements/private.txt
+
+# Standalone CI checkout and annotation reports
+.ci-platform/
+pii_report/

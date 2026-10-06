@@ -39,3 +39,10 @@ waffle.Sample:
   ".. no_pii:": "This model has no PII"
 waffle.Switch:
   ".. no_pii:": "This model has no PII"
+
+# The opaque result ID identifies a learner's grade in the consuming LMS.
+# Deleting its parent GradedAssignment cascades to this extension record.
+openedx_lti_provider_ext.GradedAssignmentExtra:
+  ".. pii:": "Opaque external identifier for a learner's assignment result"
+  ".. pii_types:": "external_service"
+  ".. pii_retirement:": "consumer_api"
