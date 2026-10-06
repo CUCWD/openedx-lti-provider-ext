@@ -517,8 +517,8 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3.11.8', None),
-    'django': ('https://docs.djangoproject.com/en/4.2/', 'https://docs.djangoproject.com/en/3.2/_objects/'),
+    'python': ('https://docs.python.org/3.11', None),
+    'django': ('https://docs.djangoproject.com/en/4.2/', 'https://docs.djangoproject.com/en/4.2/objects.inv'),
     'model_utils': ('https://django-model-utils.readthedocs.io/en/latest/', None),
 }
 
@@ -538,10 +538,18 @@ def on_init(app):  # pylint: disable=unused-argument
         bin_path = os.path.abspath(os.path.join(sys.prefix, 'bin'))
         apidoc_path = os.path.join(bin_path, apidoc_path)
     check_call([apidoc_path, '-o', docs_path, os.path.join(root_path, 'openedx_lti_provider_ext'),
-                os.path.join(root_path, 'openedx_lti_provider_ext/migrations')])
+                os.path.join(root_path, 'openedx_lti_provider_ext/migrations'),
+                os.path.join(root_path, 'openedx_lti_provider_ext/tests')])
+
+
+def preserve_legacy_docstring(app, what, name, obj, options, lines):
+    """Render the legacy role-handler notes literally without changing source."""
+    if name == "openedx_lti_provider_ext.views.handleUserByRole":
+        lines[:] = ["::", ""] + ["    " + line for line in lines]
 
 
 def setup(app):
     """Sphinx extension: run sphinx-apidoc."""
     event = 'builder-inited'
     app.connect(event, on_init)
+    app.connect('autodoc-process-docstring', preserve_legacy_docstring)

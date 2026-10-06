@@ -18,6 +18,14 @@ jobs:
         toxenv: [quality, docs, pii_check, django42, django52]
     steps:
       - uses: actions/checkout@v4
+      # Only outcome helpers are used by the standalone tests. Full platform
+      # integration tests still run in the LMS environment documented in the repo.
+      - uses: actions/checkout@v4
+        with:
+          repository: openedx/openedx-platform
+          ref: 233d6522f12f3de9e4dca19724e048fcc36849dc
+          path: .ci-platform
+          sparse-checkout: lms/djangoapps/lti_provider
       - name: setup python
         uses: actions/setup-python@v5
         with:
@@ -32,6 +40,7 @@ jobs:
       - name: Run Tests
         env:
           TOXENV: ${{ matrix.toxenv }}
+          LTI_TEST_PLATFORM_ROOT: ${{ github.workspace }}/.ci-platform
         run: tox
 
       - name: Run coverage

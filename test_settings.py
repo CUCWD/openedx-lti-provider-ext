@@ -5,6 +5,7 @@ In a real-world use case, apps in this project are installed into other
 Django applications, so these settings will not be used.
 """
 
+import sys
 from os.path import abspath, dirname, join
 
 
@@ -26,7 +27,15 @@ DATABASES = {
     }
 }
 
+# Only this standalone settings module exposes the synthetic LMS models.
+# Production settings and the packaged extension never add this directory.
+sys.path.insert(0, root("test_utils", "platform_stubs"))
+FEATURES = {"ENABLE_LTI_PROVIDER": False}
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+MIGRATION_MODULES = {"lti_provider": None, "openedx_lti_provider_ext": None}
+
 INSTALLED_APPS = (
+    'test_utils.apps.LtiProviderTestConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +48,7 @@ LOCALE_PATHS = [
     root('openedx_lti_provider_ext', 'conf', 'locale'),
 ]
 
-ROOT_URLCONF = 'openedx_lti_provider_ext.urls'
+ROOT_URLCONF = 'test_utils.urls'
 
 SECRET_KEY = 'insecure-secret-key'
 
