@@ -39,6 +39,11 @@ class OpenedxLtiProviderExtConfig(AppConfig):
 
             # Install the lis_result_sourcedid proxy to support long values via sidecar table.
             self._install_lis_result_sourcedid_proxy()
+
+            # Ensure grade passback explicitly loads the saved full sourced ID `lis_result_sourcedid_long`
+            # before the platform sender builds XML, including in LMS workers.
+            from .outcomes import install_send_score_update_override
+            install_send_score_update_override()
             
         self._patched = True
 
@@ -179,4 +184,3 @@ class OpenedxLtiProviderExtConfig(AppConfig):
 
         # Connect the post_save signal to sync sidecar writes
         post_save.connect(_sync_sidecar, sender=GradedAssignment, weak=False)
-
