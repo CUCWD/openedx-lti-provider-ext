@@ -14,7 +14,23 @@ Change Log
 Unreleased
 **********
 
-*
+0.1.6 - 2026-11-03
+******************
+
+Changed
+========
+
+* Defer runtime dependency versions to the host Ulmo edx-platform installation.
+* Declare Django, edx-django-utils, django-waffle, and requests as direct runtime
+  dependencies; remove unused model libraries and move openedx-atlas to development tooling.
+* Replace runtime and test lockfiles with references to their input files, and
+  preserve those references during requirement compilation and upgrades.
+* Replace remote common constraints with a local Ulmo snapshot for standalone
+  tooling and regenerate development, quality, documentation, and installer locks.
+* Use Django 5.2.11 for Ulmo tests and ancillary checks, retaining Django 4.2
+  compatibility coverage and the existing Python 3.12-capable style checker.
+* Let CI select the available Python 3.11 patch release on ubuntu-latest, report
+  all matrix results, and upload coverage from the Ulmo Django test job.
 
 0.1.5 - 2026-10-06
 ******************

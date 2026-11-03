@@ -22,6 +22,34 @@ organization. It should make clear where this fits into the overall Open edX
 codebase and should be oriented towards people who are new to the Open edX
 project.
 
+Ulmo dependency compatibility
+*****************************
+
+Install this plugin into an environment already provisioned with Ulmo's
+``openedx-platform/requirements``. Runtime metadata declares only directly used
+packages without version pins; the host platform owns their versions. To add
+this plugin without changing installed dependencies, run from this repository::
+
+    python -m pip install --no-deps .
+    python -m pip check
+
+``requirements/base.txt`` references the unpinned ``base.in``. Development,
+test, and quality requirements belong in isolated environments, not the LMS.
+Their shared package versions are recorded in ``requirements/ulmo-constraints.txt``
+from platform commit ``46c543590c78aa1bfa846d47a4f1c5c6ec388490``. Refresh that
+snapshot when updating the target platform. The lint-only pycodestyle version
+retains Python 3.12 support and does not constrain the host platform.
+
+To run standalone checks against a local Ulmo checkout::
+
+    export LTI_TEST_PLATFORM_ROOT=/path/to/ulmo/openedx-platform
+    tox -e django42,django52,quality,pii_check,docs
+
+The Ulmo job uses Django 5.2.11; Django 4.2 remains a compatibility check.
+``requirements/test.txt`` stays a reference to ``test.in`` so tox can select
+Django independently. ``make compile-requirements`` and ``make upgrade`` preserve
+both reference files while regenerating tooling locks with the Ulmo constraints.
+
 Getting Started with Development
 ********************************
 
