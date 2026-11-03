@@ -1,9 +1,6 @@
-# Core requirements for using this application
--c constraints.txt
-
-Django             # Web application framework
-
-django-config-models      # Configuration models for Django allowing config management with auditing
-django-model-utils        # Provides TimeStampedModel abstract base class
-
-openedx-atlas
+# Runtime dependency versions are supplied by the host edx-platform environment.
+# Do not include development constraints or compiled locks in package metadata.
+Django
+edx-django-utils
+django-waffle
+requests
